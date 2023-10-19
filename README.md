@@ -7,3 +7,7 @@ In the project directory, you can run:
 ### `npm start`
 
 
+The above Assignment is delopyed on Nelify:
+link: https://hunt-digital-media-assignmnet.netlify.app/
+
+
