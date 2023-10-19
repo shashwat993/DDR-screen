@@ -3,6 +3,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './App.css';
 
+
 function getCurrentDateTimeFormatted() {
   const currentDate = new Date();
 
@@ -55,7 +56,7 @@ const DRRScreen = () => {
     return numberOfDays;
   };
 
-  const handleCancle = () => {
+  const handleCancle =()=>{
     setStartDate(new Date());
     setEndDate(new Date());
     setExcludedDates([]);
@@ -63,37 +64,19 @@ const DRRScreen = () => {
     setExpectedDDR(0);
     setLastUpdate('');
     setCurrentDateTime(new Date().toLocaleString());
-  };
+
+  }
 
   const addTuple = () => {
     const newTuple = {
       id: tupleIdCounter,
       startDate,
       endDate,
-      excludedDates: excludedDates.map(formatDate), // Format excluded dates
+      excludedDates: [...excludedDates], // Clone the excludedDates array
       leadCount,
       expectedDDR,
       lastUpdate: currentDateTime,
     };
-
-    // Send the newTuple data to the Django backend
-    fetch('http://localhost:8000/api/save_tuple/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newTuple),
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Tuple saved successfully:', data);
-        // Handle the response as needed
-      })
-      .catch(error => {
-        console.error('Error saving tuple:', error);
-        // Handle errors or display an error message
-      });
-
     setTuples([newTuple, ...tuples]);
     setTupleIdCounter(tupleIdCounter + 1);
     setStartDate(new Date());
@@ -114,11 +97,11 @@ const DRRScreen = () => {
   };
 
   return (
-    <div>
+    <div >
       <table>
-        {/* Table header */}
         <thead>
           <tr>
+          
             <th className='col-sm-0'>Action</th>
             <th className='col-sm-1'>ID</th>
             <th className='col-sm-2'>Start Date</th>
@@ -131,7 +114,6 @@ const DRRScreen = () => {
             <th className='col-sm-1'>Last Updated</th>
           </tr>
         </thead>
-        {/* Table body */}
         <tbody>
           <tr>
             <td className='col-sm-0'>N/A</td>
@@ -152,9 +134,10 @@ const DRRScreen = () => {
                 minDate={startDate}
                 maxDate={endDate}
                 className='input-date'
+                
               />
               <div>{excludedDates.map((date) => formatDate(date)).join(', ')}</div>
-            </td>
+            </td >
             <td className='col-sm-1'>{calculateNumberOfDays(startDate, endDate, excludedDates)}</td>
             <td className='col-sm-1'>
               <input type="number" value={leadCount} onChange={(e) => setLeadCount(e.target.value)} className="input-field" />
@@ -164,23 +147,23 @@ const DRRScreen = () => {
                 type="number"
                 value={expectedDDR}
                 onChange={(e) => setExpectedDDR(e.target.value)}
-                className="input-field"
+                className="input-field" 
               />
             </td>
             <td className='col-sm-1'>
-              <button onClick={addTuple} className='btn btn-info m-1'>Save</button>
-              <button onClick={handleCancle} className='btn btn-danger m-1'>Cancel</button>
+
+              <button onClick={addTuple} className='btn btn-info m-1' >Save</button>
+              <button onClick={handleCancle} className='btn btn-danger m-1' >Cancel</button>
             </td>
           </tr>
-          {/* Display existing tuples */}
           {tuples.map((tuple) => (
             <tr key={tuple.id}>
-              <td className='col-lg-0'>SAVE</td>
+              <td className='col-lg-0' >SAVE</td>
               <td className='col-lg-1'>{tuple.id}</td>
               <td className='col-lg-2'>{formatDate(tuple.startDate)}</td>
               <td className='col-lg-2'>{formatDate(tuple.endDate)}</td>
               <td className='col-lg-1'>{tuple.endDate.toLocaleString('default', { month: 'long' })}/{tuple.endDate.getFullYear()}</td>
-              <td className='col-lg-2'>{tuple.excludedDates.map((date) => formatDate(date)).join(', ')}</td>
+              <td className='col-lg-2' >{tuple.excludedDates.map((date) => formatDate(date)).join(', ')}</td>
               <td className='col-lg-1'>{calculateNumberOfDays(tuple.startDate, tuple.endDate, tuple.excludedDates)}</td>
               <td className='col-lg-1'>{tuple.leadCount}</td>
               <td className='col-lg-1'>{tuple.expectedDDR}</td>
